@@ -25,6 +25,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import com.example.android.dessertclicker.databinding.ActivityMainBinding
 import timber.log.Timber
 
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
-        dessertTimer = DessertTimer()
+        dessertTimer = DessertTimer(this.lifecycle)
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -82,11 +84,11 @@ class MainActivity : AppCompatActivity() {
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
     }
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     override fun onStart() {
         super.onStart()
         Timber.i("onStart Called")
-        dessertTimer.startTimer()
+
     }
 
     override fun onResume() {
@@ -97,10 +99,11 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         Timber.i("onPause Called")
     }
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     override fun onStop() {
         super.onStop()
         Timber.i("onStop Called")
-        dessertTimer.stopTimer()
+
     }
     override fun onDestroy() {
         super.onDestroy()
